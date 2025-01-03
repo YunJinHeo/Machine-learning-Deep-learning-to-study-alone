@@ -51,3 +51,92 @@ Variance : 예측값의 분산 -> 다양한 데이터 셋에 대하여 예측값
 **middle(low) Bias & middle(low) Variance를 지향해야함!**
 
 # 03-2 선형 회귀
+## 선형 회귀
+ 특성이 하나인 경우 어떤 직선을 학습하는 알고리즘이다.
+   from sklearn.linear_model import LinearRegression
+   lr = LinearRegression()
+   lr.fit(train_input, train_target)
+
+LinearRegression() 클래스도 마찬가지로 fit(), score(), predict() 메서드가 있다.
+
+lr.coef_, lr.intercept_에 lr이 찾은 기울기와 절편이 저장되어 있다.
+
+## 다항 회귀
+      train_poly = np.column_stack((train_input ** 2, train_input))
+      test_poly = np.column_stack((test_input ** 2, test_input))
+
+clumn_stack을 이용해서 input의 제곱과 input을 행에 갖는 2차식 list를 만들 수 있다.
+
+    lr = LinearRegression()
+    lr.fit(train_poly, train_target)
+
+무게 = a * $길이^2$ + b * 길이 + c 의 그래프를 학습하며 이와 같은 식을 **다항식**이라고 부른다.
+
+다항식을 사용한 선형 회귀를 **다항 회귀**라고 한다.
+
+# 03-3 특성 공학과 규제
+## 다중 회귀
+ 여러 개의 특성을 사용한 선형 회귀를 **다중 회귀**라고 부른다.
+
+ **특성 공학** : 기존의 특성을 사용해 새로운 특성을 뽑아내는 작업
+
+## 데이터 준비
+    import pandas as pd
+    df = pd.read_csv('https://bit.ly/perch_csv_data')
+    perch_full = df.to_numpy()
+
+pandas의 dataframe과 to_numpy()를 이용하면 csv파일을 numpy array로 변환시킬 수 있다.
+
+## 사이킷런의 변환기
+ 사이킷런에서 특성을 만들거나 전처리하기 위해 제공하는 클래스를 **변환기**라고 부른다.
+
+ 일관된 fit(), transform() 메서드를 제공한다.
+
+    from sklearn.preprocessing import PolynomialFeatures
+    poly - PolynomialFeatures()
+    poly.fit([2,3])
+    poly.transform([[2,3]])
+
+    -> [[1,2,3,4,6,9]]
+
+ PolynomialFeatures() : 입력받은 list의 제곱한 항, 서로 곱한 항, 1을 추가한다. 1은 절편을 위한 특성이다.
+
+ include_bias = False 로 하면 절편(1)을 제거할 수 있다.
+
+     poly = PolynomialFeatures(include_bias = False)
+     poly.fit(train_input)
+     train_poly = poly.transform(train_input)
+     test_poly = poly.transform(test_input)  # 항상 훈련 세트를 기준으로 테스트 세트를 변환하는 습관을 들이자.
+     train_poly.shape
+
+     -> (42,9)
+## 다중 회귀 모델 훈련하기
+    from sklearn.linear_model import LinearRegression
+    lr = LinearRegression()
+    lr.fit(train_poly, train_target)
+
+PolynomialFeatures 클래스의 degree 매개변수를 사용하면 필요한 고차항의 최대 차수를 지정할 수 있다.
+
+    poly = PolynomialFeatures(degree = 5)
+
+degree를 증가시켜 특성의 개수를 늘리면 훈련 세트에 너무 과대적합 될 수 있다.
+
+## 규제
+ 규제는 머신러닝 모델이 훈련 세트를 너무 과도하게 학습하지 못하도록 하는 것을 말한다. 선형 회귀 모델의 경우 계수(기울기)이 크기를 작게 만드는 일을 말한다.
+
+ 선현 회귀 모델에 규제를 적용하기 전에는 먼저 정규화를 해야한다.
+
+    from sklearn.preprocessing import StandardScaler
+    ss = StandardScaler()
+    ss.fit(train_poly)
+    train_scaled = ss.transform(train_poly)
+    test_scaled = ss.transform(test_poly)
+
+StandardScaler 클래스는 데이터를 표준화한다. 즉 평균을 빼고 표준편차로 나누어준다.
+
+선형 회귀 모델에 규제를 추가한 모델을 **릿지Ridge** 와 **라쏘Lasso**라고 부른다.
+
+Ridge는 계수를 제곱한 값을 기준으로 규제를 적용하고 Lasso는 계수의 절댓값을 기준으로 규제를 적용한다.
+ 
+
+  
