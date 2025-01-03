@@ -137,6 +137,26 @@ StandardScaler 클래스는 데이터를 표준화한다. 즉 평균을 빼고 �
 선형 회귀 모델에 규제를 추가한 모델을 **릿지Ridge** 와 **라쏘Lasso**라고 부른다.
 
 Ridge는 계수를 제곱한 값을 기준으로 규제를 적용하고 Lasso는 계수의 절댓값을 기준으로 규제를 적용한다.
+
+## Ridge regression(L2)
+ 최소제곱법을 이용한 선형회귀에서는 $residual^2$의 합의 최솟값을 구하지만, ridge regression은 $residual^2$ + $lambda$ * $slop^2$의 최솟값을 구한다.
  
+ lambda * $slop^2$을 ridge regression penalty라고 하며 결과적으로 계수를 줄이는 역할을 한다.
+
+ slope가 줄어든다는 것은 해당 변수에 대해 예측값이 덜 민감해진다는 것을 의미한다.
+
+ -> Variance를 줄이는 대신 Bias가 증가한다.
+
+     from sklearn.linear_model import Ridge
+     ridge = Ridge()
+     ridge.fit(train_scaled, train_target)
+
+alpha 값이 크면 패널티가 더커지므로 조금 더 과소적합되도록 유도한다. 반대로 alpha 값이 작아지면 과대적합 될 가능성이 크다.
+
+ ## Lesso regression(L1)
+ lessp regression은 $residual^2$ + $lambda$ * $abs(slope)$의 최솟값을 구한다.
+
+ lesso와 ridge는 거의 비슷하고 행동한다. 하지만, ridge는 lambda가 커지면 계수를 0에 근사하도록 축소하는 반면 lasso는 계수를 완전히 0으로 축소시킨다는 차이점이 있다. 따라서 ridge의 경우 입력변수가 전반적으로 비슷한 수준으로 출력변수에 영향을 미치는 경우에 사용하고 lasso의 경우 출력변수에 미치는 입력변수의 영향력 편차가 큰 경우에 사용한다.
+
 
   
