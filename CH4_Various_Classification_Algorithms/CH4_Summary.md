@@ -83,6 +83,40 @@ predict_proba() : 클래스별 확률값을 반환한다.
  확률이 0에 가까워지면 무한대를 1에 가까워지면 0의 값을 갖게된다.
 
 
+ 다중 분류에서 사용하는 손실 함수는 **크로스엔트로피 손실 함수corss-entropy loss function**라고 부른다.
+
+ 회귀에서는 평균 제곱 오차를 손실 함수로 많이 사용한다.
+
+## SGDClassifier
+
+    from sklearn.linear_model import SGDClassifier
+    sc = SGDClassifier(loss = 'log_loss', max_iter = 10)
+    sc.fit(train_scaled, train_target)
+
+SGDClassifier의 객체를 이용해 확률적 경사 하강법을 사용할 수 있다. loss 매개변수로 손실 함수의 종류를 지정하고 max_iter로 수행할 에포크의 횟수를 지정할 수 있다.
+
+    sc.partial_fit(train_scaled, train_target)
+
+partial_fit() : 모델을 이어서 훈련하고 싶을 때 사용할 수 있는 메서드로 호출할 때마다 1에포크씩 이어서 훈련한다. fit()을 사용하지 않고 partial_fit() 메서드만 사용하고 싶으면 classes 매개변수에 전체 클래스 레이블을 전달해 주어야 한다.
+
+## 에포크와 과대/과소적합
+ 적은 에포크는 과소적합을 많은 에포크는 과대적합을 야기할 수 있다.
+
+    import numpy as np
+    sc = SGDClassifier(loss = 'log_loss')
+    train_score = []
+    test_score = []
+    classes = np.unique(train_target)
+
+    for _ in range(0,300) :
+    sc.partial_fit(train_scaled, train_target, classes = classes)
+    train_score.append(sc.score(train_scaled, train_target))
+    test_score.append(sc.score(test_scaled, test_target))
+
+ 에포크에 따른 정확도를 측정하여 적절한 반복 횟수를 찾을 수 있다.
+
+ SGDClassfier의 loss 매개변수 기본값은 'hindge이다.힌지 손실은 서포트 벡터 머신이라 불리는 머신러닝 알고리즘을 위한 손실 함수이다.
+ 
 
 
  
