@@ -36,7 +36,11 @@ predict_proba() : 클래스별 확률값을 반환한다.
     lr.fit(train_bream_smelt, target_bream_smelt)
 
 ## 로지스틱 회귀로 다중 분류 수행하기
- LogisticRegression은 기본적으로 반복적인 알고리즘을 사용한다. max_iter 변수에서 반복 횟수를 지정할 수 있으며 기본값은 100이다.
+
+![image](https://github.com/user-attachments/assets/6a5cd29a-f383-45af-b458-833aea52ee6d)
+
+
+ LogisticRegression은 시그모이드 함수에서 입력값의 적절한 가중치를 찾기 위해 기본적으로 반복적인 알고리즘을 사용한다.(경사하강법) max_iter 변수에서 반복 횟수를 지정할 수 있으며 기본값은 100이다.
 
  LogisticREgression은 기본적으로 릿지 회귀(L2)와 같이 계수의 제곱을 규제한다. 매개변수 C로 규제를 제어할 수 있으며 alpha와 반대로 작을수록 규제가 커진다.
 
