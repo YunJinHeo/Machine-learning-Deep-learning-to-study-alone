@@ -147,7 +147,38 @@ cv : 사용할 분할기splitter와 shuffle 여부를 지정할 수 있다. 기�
     gs.fit(train_input, train_target)
 
 ## 랜덤 서치
- 
+ 매개변수 값의 범위나 간격을 미리 정하기 어렵거나 너무 많은 매개변수 조건이 있어서 그리드 서치 수행 시간이 오래 걸릴 우려가 있다면 **랜덤 서치Random Search**를 사용할 수 있다.
+
+ 랜덤 서치에는 매개변수 값의 목록을 전달하는 것이 아니라 매개변수를 샘플링할 수 있는 확률 분포 객체를 전달하게 된다.
+
+    from scipy.stats import uniform, randint
+
+ scipy의 stats 서브 패키지에 있는 uniform과 randint 클래스는 각각 실수 값, 정수 값에서 랜덤한 값을 추출한다.
+
+    rgen = randint(0,10)
+    rgen.rvs(10)
+    ugen = uniform(0,1)
+    ugen.rvs(10)
+
+RandomizedSearchCV 클래스를 이용하여 랜덤서치를 수행할 수 있다.
+
+    from sklearn.model_selection import RandomizedSearchCV
+    params = {'min_impurity_decrease' : uniform(0.0001, 0.001),
+              'max_depth' : randint(20, 50),
+              'min_samples_split' : randint(2,25),
+              'min_samples_leaf' : randint(1,25)
+              }
+    gs = RandomizedSearchCV(DecisionTreeClassifier(), params, n_iter = 100, n_jobs=-1)
+    gs.fit(train_input, train_target)
+    dt = gs.best_estimator_
+    dt.score(test_input, test_target)
+
+n_iter 매개변수로 샘플링 횟수를 설정한다.
+
+ 모델의 적절한 하이퍼파라미터 수치를 찾고자 할 때는 수동으로 매개변수를 바꾸는 대신에 그리드 서치나 랜덤 서치를 사용하는 것이 편리하다.
+
+# 05-3 트리의 앙상블
+
  
 
  
