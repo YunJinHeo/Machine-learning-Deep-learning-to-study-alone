@@ -178,8 +178,39 @@ n_iter 매개변수로 샘플링 횟수를 설정한다.
  모델의 적절한 하이퍼파라미터 수치를 찾고자 할 때는 수동으로 매개변수를 바꾸는 대신에 그리드 서치나 랜덤 서치를 사용하는 것이 편리하다.
 
 # 05-3 트리의 앙상블
+## 정형 데이터와 비정형 데이터
+ CSV나 Database, Excel 과 같이 어떠한 구조로 되어 있는 데이터를 **정형 데이터structured data**라고 한다.
 
- 
+ 반대로 글, 사진, 음악 등 어떠한 구조로 표현하기 힘든 데이터를 **비정형 데이터unstructured data**라고 한다.
+
+ 정형 데이터를 다루는 데 가장 뛰어난 성과를 내는 알고리즘이 **앙상블 학습ensemble learning**이다.
+
+## 랜덤 포레스트
+ **랜덤 포레스트Random Forest**는 앙상블 학습의 대표주자로 안정적인 성능을 자랑한다. 앙상블 학습을 적용할 때 가장 먼저 랜덤 포레스트를 시도해 보는 것이 좋다.
+
+ 랜덤 포레스트는 이름에서도 알 수 있듯이 결정 트리를 랜덤하게 만든 뒤 각 트리의 예측을 사용해 최종 예측을 만든다.각 트리를 훈련하기 위해 데이터를 랜덤하게 만드는데 이때 부트스트랩 방식을 사용한다.
+
+### 부트스트랩
+ 표본에서 샘플을 뽑을때 뽑았던 샘플을 다시 표본에 넣으면서 뽑는 방식. 예를들어 가방에서 100개의 샘플을 뽑는다면 1개를 뽑고 뽑았던 샘플을 적어둔 뒤 다시 가방에 넣는다. 그 후 마찬가지로 100개의 샘플을 뽑는다.
+
+ RandomForestClassifier 클래스를 이용해 랜덤 포레스트를 실행할 수 있다. 기본적으로 전체 특성 개수의 제곱근 만큼의 특성을 선택한 후에 그 특성들을 바탕으로 최선의 분할을 찾는다.
+
+ 랜덤 트리와 달리 특성을 무작위로 선택하기 때문에 한가지 특성에 편향되지 않고 여러 특성에 고루 영향을 받는 모델을 만들 수 있다. 이는 훈련 세트에 과대적합되는 것을 막아주고 검증 세트와 테스트 세트에서 안정적인 성능을 얻을 수 있도록 도와준다.
+
+    from sklearn.ensemble import RandomForestClassifier
+    rf = RandomForestClassifier(n_jobs=-1)
+    scores = cross_validate(rf, train_input, train_target, return_train_score = True, n_jobs=-1)
+
+### OOB
+ RandomForestClassifier의 OOB(out of bag) 샘플을 이용하면 자체적으로 모델을 평가하는 점수를 얻을 수 있다. OOB란 부트스트랩 샘플에 포함되지 않고 남는 샘플을 말한다. RandomForestClassifier의 oob_score 매개변수를 True로 지정하면 남은 샘플을 이용해 훈련한 결정 트리를 평가할 수 있다.
+
+    rf = RandomForestClassifier(obb_score = True, n_jobs=-1)
+    rf.fit(train_input, train_target)
+    print(rf.obb_score_)
+
+### 연산 횟수
+ 랜덤 포레스트에 검증을 시행할 때 총 트리 생성 횟수 = (랜덤 포레스트의 n_estimator) * (k 폴드) * (하이퍼 파라미터 튜닝 횟수)
+
 
  
  
