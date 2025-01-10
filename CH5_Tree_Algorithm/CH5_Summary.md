@@ -211,8 +211,69 @@ n_iter 매개변수로 샘플링 횟수를 설정한다.
 ### 연산 횟수
  랜덤 포레스트에 검증을 시행할 때 총 트리 생성 횟수 = (랜덤 포레스트의 n_estimator) * (k 폴드) * (하이퍼 파라미터 튜닝 횟수)
 
+## 엑스트라 트리
+ 전체적으로는 랜덤포레스트와 비슷하게 작용한다. 차이점은 부트스트랩 샘플을 사용하지않는 대신 노드를 분할할 때 가장 좋은 분할을 찾는 것이 아니라 무작위로 분할한다는 점이다.
 
+ 결정트리를 무작위로 분할하면 성능이 낮아질 수 있으나 많은 트리를 앙상블하기 때문에 과대적합을 막고 검증 세트의 점수를 높이는 효과가 있다.
+
+ ExtraTreesClassifier 클래스를 이용해 엑스트라 트리를 실현할 수 있다.
+
+    from sklearn.ensemble import ExtraTreesClassifier
+    et = ExtraTreesClassifier(n_jobs = -1)
+
+ 엑스트라 트리가 랜덤 포레스트에 비해 무작위성이 더 크기 때문에 더 많은 결정 트리를 훈련해야 되긴 하지만 랜덤하게 노드를 분할하기 때문에 계산속도가 빠르다는 장점이 있다.
+
+## 그레디언트 부스팅
+ **그레디언트 부스팅gradient boosting**은 깊이가 얕은 결정 트리를 사용하여 이전 트리의 오차를 보완하는 방식으로 앙상블 하는 방법이다.
+
+ GradientBoostingClassifier 클래스를 통해 이용 가능하며 기본적으로 깊이가 3인 결정 트리를 100개 사용한다.
+
+ 배치 경사 하강법을 사용하여 트리를 앙상블에 추가한다. 분류에서는 로지스틱 손실 함수를 사용하고 회귀에서는 평균 제곱 오차 함수를 사용한다.
+
+ 깊이가 얕은 트리로 샘플을 분류한 뒤 예측값과 타깃값의 잔차를 샘플링하여 새로운 트리를 만든다. 이 방식을 반복하여 예측과 타깃값의 잔차를 줄여나간다.
+
+    from sklearn.ensemble import GradientBoostingClassifier
+    gb = GradientBoostingClassifier(n_estimators = 500, learning_rate = 0.2)
+
+ n_estimators 매개변수로 결정 트리의 개수를 정하고 learning_rate 매개변수로 학습률을 설정할 수 있다.
+
+ subsample 매개변수를 이용하여 경사 하강법에 사용한 샘플 비중을 조절할 수 있으며 이를 통해 미니배치 경사 하강법으로 그레디언트 부스팅을 진행할 수도 있다.
+
+ GradientBoostingClassifier은 n_jobs 매개변수가 없는데 이는 그레디언트 부스팅의 특성상 연산을 순차적으로 진행할 수밖에 없기 때문이다. 이러한 이유로 랜덤 포레스트보다 성능이 좋은 대신에 속도가 느리다.
+
+## 히스토그램 기반 그레디언트 부스팅
+**히스토그램 기반 그레디언트 부스팅Histogram-based Gradient Boosting**은 정형 데이터를 다루는 머신러닝 알고리즘 중 가장 인기가 높은 알고리즘이다.
+
+입력 특성을 256개의 구간으로 나누고 그레디언트 부스팅을 실행하게 되는데 이로인해 최적의 분할을 빠른 속도로 찾을 수 있다. 그레디언트 부스팅의 속도가 느리다는 단점을 보완한 모델이라고 할 수 있다.
+
+256개의 구간 중에서 한 구간은 누락된 값을 이용해 사용하기 때문에 결측값이 있더라도 따로 전처리할 필요가 없다는 장점도 있다.
+
+HistGradientBoostingClassifier 클래스를 통해 이용 가능하다.
+
+    from sklearn.ensemble import HistGradientBoostingClassifier
+    hgb = HistGradientBoostingClassifier()
+
+ 과대적합을 잘 억제하면서 그레디언트 부스팅보다 조금 더 높은 성능을 제공한다. 
+
+ 히스토그램 기반 그레디언트 부스팅의 특성 중요도를 계산하기 위해서는 permutation_importance() 함수를 사용해야 한다. 이 함수는 특성을 하나씩 랜덤하게 섞어서 모델의 성능이 변화하는지 관찰하여 어떤 특성이 중요한지를 계산한다. n_repeats 매개변수로 랜덤하게 섞을 횟수를 지정할 수 있다.
+
+     from sklearn.inspection import permutation_importance
+     hgb.fit(train_input, train_target)
+     result = permutation_importance(hgb, train_input, train_target, n_repeats=10 n_jobs=-1)
+
+## 대표적인 그레디언트 부스팅 라이브러리
+ XGBoost : 다양한 부스팅 알고리즘을 지원하며 tree_method 매개변수를 hist로 지정하면 히스토그램 기반의 그레디언트 부스팅을 사용할 수 있다.
+
+ *xgboost 라이브러리는 sklearn 버전 1.6 미만에서만 사용할 수 있다.
  
+    from xgboost import XGBClassifier
+    xgb = XGBClassifier(tree_method = 'hist')
+
+ LightGBM : 마이크로소프트에서 만든 그레디언트 부스팅 라이브러리
+
+     from lightgbm import LGBMClassifier
+     lgb = LGBMClassifier()
+     
  
  
  
