@@ -214,12 +214,75 @@
 
  ![image](https://github.com/user-attachments/assets/85cf0f9d-e5f9-4d6b-853e-2484439795c2)
 
+ ![image](https://github.com/user-attachments/assets/c4cc1ed5-1bc9-4231-9584-68784a1a2c65)
+
+
  3. 고유값 분해 : 공분산 행렬 C에 대해 고유값과 고유벡터를 계산한다.
- 4.  고유값을 내림차순으로 정렬하여 가장 큰 고유 값에 대응하는 고유 벡터부터 선택한다. 이 벡터가 첫번째 주성분이 되며, 이러한 방식으로 원하는 수의 주성분을 선택한다.
+ 4. 고유값을 내림차순으로 정렬하여 가장 큰 고유 값에 대응하는 고유 벡터부터 선택한다. 이 벡터가 첫번째 주성분이 되며, 이러한 방식으로 원하는 수의 주성분을 선택한다.
 
 
  주성분의 차원은 원본 차원과 같으나 주성분에 투영한 데이터는 차원이 줄어든다. 주성분은 가장 분산이 큰 방향을 담고 있기 때문에 주성분에 투영하여 바꾼 데이터는 원본이 가지고 있는 특성을 가장 잘 나태낼 것이다.
 
+ 주성분은 특성의 개수와 샘플 개수 중 작은 값만큼 찾을 수 있다. 일반적으로 비지도 학습은 다량의 데이터에서 수행하기 때문에 원본 특성의 개수만큼 찾을 수 있다고 말한다.
+
+ ## PCA 클래스
+ 주성분 분석은 sklearn.decomposition 모듈 아래 PCA 클래스로 구현되어 있다.
+
+    from sklearn.decomposition import PCA
+    pca = PCA(n_components=50)
+    pca.fit(fruits_2d)
+
+ n_components 
  
+ 1보다 큰 값을 넣으면 얻고자 하는 주성분의 개수를 지정할 수 있다. 
+
+ 1보다 작은 값을 넣으면 원하는 설명된 분산의 비율을 지정할 수 있다. 원하는 설명된 분산의 비율을 얻을 수 있는 최소한의 주성분을 추출하게 된다.
  
-    
+ 클래스가 찾은 주성분은 components_ 속성에 저장된다. 
+
+    fruits_pca = pca.transform(fruits_2d)
+
+ transform() 메서드를 이용하여 기존 데이터의 특성을 주성분으로 바꿀 수 있다. 위의 경우 특성의 개수를 10,000개에서 50개로 줄일 수 있다.
+
+ 특성을 줄이면 데이터를 저장할 공간을 크게 줄일 수 있다.
+
+## 원본 데이터 재구성
+ PCA 클래스의 iverse_tranform() 메서드를 이용하면 주성분을 원래 특성으로 복원할 수 있다.
+
+    fruits_invers = pca.inverse_transform(fruits_pca)
+
+ 복원된 파일은 데이터가 누락되어 있기 때문에 일부 흐리고 번진 부분이 있을 수 있다.
+
+## 설명된 분산
+ 주성분이 원본 데이터의 분산을 얼마나 잘 나타내는지 기록한 값을 **설명된 분산explained variance**이라고 한다. 설명된 분산은 한 주성분에 대응되는 고유값을 공분산 행량의 모든 고유값의 합으로 나누어 계산한다.
+
+ ![image](https://github.com/user-attachments/assets/2966de45-fb8e-4c3c-af78-e7f957ecde46)
+
+ PCA 클래스의 explained_variance_ratio_에 각 주성분의 설명된 분산 비율이 기록되어 있다.
+
+    print(np.sum(pca.explained_variance_ratio_)
+
+ ![image](https://github.com/user-attachments/assets/841f8fb4-4bb6-495e-b959-3fe058ed568d)
+
+    plt.plot(pca.explained_variacnce_ratio_)
+    plt.show()
+
+![image](https://github.com/user-attachments/assets/7bd9f8d0-9611-4708-b7c1-ccf9725643a5)
+
+ 처음 10개의 주성분이 대부분의 분산을 표현하고 있음을 알 수 있다.
+
+## 다른 알고리즘과 함께 사용하기
+ 지도 학습을 할 때 PCA로 훈련 데이터의 차원을 축소하면 저장공간 뿐만 아니라 머신러닝 모델의 훈련 속도도 높일 수 있다.
+
+ 훈련 데이터의 차원을 3개 이하로 줄이면 시각화를 할 수 있다는 장점도 있다.
+
+    for label in range(0,3) :
+      data = fruits_pca[km.labels_ == label]
+      plt.scatter(data[:,0], data[:,1])
+    plt.legend(['apple', 'banana', 'pineapple'])
+    plt.show()
+
+![image](https://github.com/user-attachments/assets/014bbc8d-80b3-4783-b939-dc22a2486c66)
+
+
+ 
