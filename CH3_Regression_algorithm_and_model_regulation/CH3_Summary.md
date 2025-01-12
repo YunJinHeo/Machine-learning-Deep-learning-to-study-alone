@@ -53,9 +53,18 @@ Variance : 예측값의 분산 -> 다양한 데이터 셋에 대하여 예측값
 # 03-2 선형 회귀
 ## 선형 회귀
  특성이 하나인 경우 어떤 직선을 학습하는 알고리즘이다.
-   from sklearn.linear_model import LinearRegression
-   lr = LinearRegression()
-   lr.fit(train_input, train_target)
+
+ 입력 값을 x 출력 값을 y 에러를 e 라고 하면, $y = ax + b + e $
+
+ 양변에 공분산을 취해서 계산하면 a = $cov(x,y)\over V(x)$
+
+ 양변에 평균을 취해서 계산하면 b = E(y) - $cov(x,y)\over V(x)$ $\times E(x)$
+
+ 위의 식을 이용해 a, b를 구하면 특성이 하나인 경우의 선형 회귀식을 얻을 수 있다. 
+ 
+     from sklearn.linear_model import LinearRegression
+     lr = LinearRegression()
+     lr.fit(train_input, train_target)
 
 LinearRegression() 클래스도 마찬가지로 fit(), score(), predict() 메서드가 있다.
 
