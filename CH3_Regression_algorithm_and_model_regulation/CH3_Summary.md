@@ -105,7 +105,7 @@ pandas의 dataframe과 to_numpy()를 이용하면 csv파일을 numpy array로 �
 
     from sklearn.preprocessing import PolynomialFeatures
     poly = PolynomialFeatures()
-    poly.fit([2,3])
+    poly.fit([[2,3]])
     poly.transform([[2,3]])
 
     -> [[1,2,3,4,6,9]]
