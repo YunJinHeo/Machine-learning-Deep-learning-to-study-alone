@@ -53,7 +53,7 @@ np.concatenate() : 전달받은 리스트를 그대로 연결한다.
     from sklearn.model_selection import train_test_split
     train_input, test_input, train_target, test_target = train_test_split(fish_data, fish_target, stratify = fish_target)
 
-sklearn.modle.selection의 train_test_split()을 이용하면 불편하게 np.shuffle을 사용할 필요없이 샘풀을 훈련 세트와 테스트 세트로 나눌 수 있다.
+sklearn.modle.selection의 train_test_split()을 이용하면 불편하게 np.shuffle을 사용할 필요없이 샘플을 훈련 세트와 테스트 세트로 나눌 수 있다.
 
 기본적으로 25%를 테스트 세트로 떼어낸다. stratify 매개변수를 이용하면 target data와 같은 비율로 훈련 세트, 테스트 세트를 구성할 수 있다.
 
