@@ -65,17 +65,17 @@ sklearn.modle.selection의 train_test_split()을 이용하면 불편하게 np.sh
 
  각 특성값에서 평균을 빼고 표준편차로 나누어 주면 된다.
 
-  mean = np.mean(train_input, axis = 0)
-  std = np.std(train_input, axis = 0)
+    mean = np.mean(train_input, axis = 0)
+    std = np.std(train_input, axis = 0)
 
 np.mean np.std : 각각 입력한 리스트의 평균과 표준편차를 출력한다. axis를 0으로 설정하면 각 열의 통계 값을 1로 설정하면 각 행의 통계 값을 계산한다.
 
-  train_scaled = (train_input - mean) / std
+    train_scaled = (train_input - mean) / std
 
 ## 전처리 데이터로 모델 훈련하기
-  kn.fit(train_scaled, train_target)
-  test_scaled = (test_input - mean) / std
-  kn.score(test_scaled, test_target)
+    kn.fit(train_scaled, train_target)
+    test_scaled = (test_input - mean) / std
+    kn.score(test_scaled, test_target)
 
 kn.score()을 할 때 테스트 세트도 훈련 세트와 마찬가지로 훈련 세트의 표준편차, 평균을 이용해서 표준점수로 변환해 주어야 한다.
  
