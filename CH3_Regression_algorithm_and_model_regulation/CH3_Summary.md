@@ -165,7 +165,7 @@ Ridge는 계수를 제곱한 값을 기준으로 규제를 적용하고 Lasso는
 alpha 값이 크면 패널티가 더커지므로 조금 더 과소적합되도록 유도한다. 반대로 alpha 값이 작아지면 과대적합 될 가능성이 크다.
 
 적절한 alpha 값을 찾는 방법은 alpha에 대한 $R^2$값의 그래프를 그려보는 것이다.
- ## Lesso regression(L1)
+ ## Lasso regression(L1)
  lessp regression은 $residual^2$ + $lambda$ * $abs(slope)$의 최솟값을 구한다.
 
      from sklearn.linear_model import Lasso
