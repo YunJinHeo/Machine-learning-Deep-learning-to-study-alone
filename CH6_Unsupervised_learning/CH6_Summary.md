@@ -72,9 +72,9 @@
 
  픽셀 평균값을 100*100 크기로 바꿔서 이미지를 출력하면 픽셀을 평균 낸 이미지를 출력할 수도 있다.
 
-    apple_mean = np.mean(apple, axis=0).reshape(-1, 100, 100)
-    pineapple_mean = np.mean(pineapple, axis=0).reshape(-1, 100, 100)
-    banana_mean = np.mean(banana, axis=0).reshape(-1, 100, 100)
+    apple_mean = np.mean(apple, axis=0).reshape(100, 100)
+    pineapple_mean = np.mean(pineapple, axis=0).reshape(100, 100)
+    banana_mean = np.mean(banana, axis=0).reshape(100, 100)
     fig, axs = plt.subplots(1, 3, figsize = (20,5))
     axs[0].imshow(apple_mean, cmap = 'gray_r')
     axs[1].imshow(pineapple_mean, cmap = 'gray_r')
