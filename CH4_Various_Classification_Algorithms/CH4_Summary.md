@@ -44,7 +44,7 @@ predict_proba() : 클래스별 확률값을 반환한다.
 
 ![image](https://github.com/user-attachments/assets/20a2f2ee-d262-48f0-a8e0-d09acd53ed8c)
 
- LogisticREgression은 기본적으로 릿지 회귀(L2)와 같이 계수의 제곱을 규제한다. 매개변수 C로 규제를 제어할 수 있으며 alpha와 반대로 작을수록 규제가 커진다.
+ LogisticRegression은 기본적으로 릿지 회귀(L2)와 같이 계수의 제곱을 규제한다. 매개변수 C로 규제를 제어할 수 있으며 alpha와 반대로 작을수록 규제가 커진다.
 
      lr = LogisticRegression(C=20, max_iter = 1000)
      lr.fit(train_scaled, train_target)
