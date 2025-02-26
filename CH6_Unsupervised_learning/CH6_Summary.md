@@ -150,7 +150,7 @@
   ![image](https://github.com/user-attachments/assets/ac6d2e8f-c106-4578-bfff-763052909c80)
 
 ## 클러스터 중심
- KMeans 클래스가 최정적으로 찾은 클로스터 중심은 cluster_centers_ 속성에 저장되어 있다.
+ KMeans 클래스가 최종적으로 찾은 클로스터 중심은 cluster_centers_ 속성에 저장되어 있다.
 
     draw_fruits(km.cluster_centers_.reshpae(-1, 100, 100), ratio=3)
 
